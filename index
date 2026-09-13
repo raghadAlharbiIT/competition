@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>Tabby Savings</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Fredoka:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root{
+    /* ---- Tabby brand tokens, pulled from splash screen / app screenshots ---- */
+    --mint: #5CE28C;        /* splash-screen brand green */
+    --mint-deep: #3FCB74;
+    --ink: #141414;         /* logo / heading black */
+    --ink-soft: #4A4A46;
+    --cream: #F1EEE8;       /* app background */
+    --panel: #FFFFFF;
+    --tan: #EAE1D3;         /* pill buttons on the payments screen */
+    --tan-text: #1C1C1A;
+    --line: #E3DFD3;
+    --muted: #8A867C;
+
+    /* ---- functional tints, exact values from brand sheet ---- */
+    --pos-1:#DAF0DF; --pos-2:#90D19F; --pos-3:#57C26E;
+    --warn-1:#FCEDB8; --warn-2:#FAAC5E; --warn-3:#EA883D;
+    --neg-1:#FFE1DE; --neg-2:#FC9B8E; --neg-3:#E3715D;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  body{
+    background:#DCD8CB;
+    display:flex; justify-content:center;
+    padding: 40px 12px;
+    font-family:'IBM Plex Sans Arabic','Space Grotesk',sans-serif;
+    color: var(--ink);
+  }
+
+  .poster{
+    width: 1080px;
+    max-width:100%;
+    background: var(--cream);
+    border:1px solid var(--line);
+    overflow:hidden;
+  }
+
+  /* ===== Header : just the wordmark, no subtitle clutter ===== */
+  .header{
+    background: var(--mint);
+    padding: 46px 56px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .wordmark{
+    font-family:'Fredoka',sans-serif;
+    font-weight:700;
+    font-size:44px;
+    color: var(--ink);
+    letter-spacing:-0.01em;
+  }
+  .header .comp-tag{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:12.5px;
+    color: var(--ink);
+    background: rgba(0,0,0,0.08);
+    padding:7px 14px;
+    border-radius:20px;
+  }
+
+  .intro{
+    padding: 26px 56px;
+    border-bottom:1px solid var(--line);
+    font-size:15.5px;
+    color: var(--ink-soft);
+    line-height:1.9;
+  }
+  .intro b{color:var(--ink);}
+
+  .grid-2{display:grid; grid-template-columns:1fr 1fr;}
+  .cell{padding:32px 40px; border-bottom:1px solid var(--line);}
+  .cell.border-l{border-right:1px solid var(--line);}
+
+  .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:12.5px; color:var(--muted);
+    margin-bottom:14px;
+  }
+  .eyebrow .mark{
+    width:22px;height:22px;
+    background: var(--ink); color: var(--mint);
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px; font-weight:700; flex-shrink:0; border-radius:6px;
+  }
+  .cell h2{font-family:'Fredoka',sans-serif; font-size:23px; margin-bottom:12px; font-weight:600;}
+  .cell p{font-size:14.5px; line-height:1.85; color:var(--ink-soft);}
+
+  .stat-row{display:flex; gap:10px; margin-top:18px; flex-wrap:wrap;}
+  .stat{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:10px 14px; font-size:13px; flex:1; min-width:110px;}
+  .stat b{display:block; font-family:'Space Grotesk',sans-serif; font-size:19px;}
+  .stat span{color:var(--muted); font-size:12px;}
+
+  .solution-list{margin-top:16px; display:flex; flex-direction:column; gap:10px;}
+  .solution-list div{display:flex; gap:10px; align-items:flex-start; font-size:14px; color:var(--ink-soft); line-height:1.7;}
+  .solution-list div::before{content:""; width:8px; height:8px; border-radius:50%; background:var(--mint-deep); margin-top:7px; flex-shrink:0;}
+
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); border-bottom:1px solid var(--line);}
+  .grid-3 .cell{border-bottom:none;}
+  .grid-3 .cell:not(:last-child){border-left:1px solid var(--line); border-right:none;}
+  .benefit-icon{width:34px;height:34px; border-radius:10px; background:var(--mint); display:flex;align-items:center;justify-content:center; font-weight:700; font-size:15px; margin-bottom:14px;}
+
+  /* ===== use cases ===== */
+  .usecases{padding:36px 56px 40px; border-bottom:1px solid var(--line); background:var(--cream);}
+  .usecases .head h2{font-family:'Fredoka',sans-serif; font-size:22px; font-weight:600;}
+  .usecases .head p{font-size:13.5px; color:var(--muted); margin-top:6px; margin-bottom:26px;}
+  .story-grid{display:grid; grid-template-columns:repeat(6,1fr); gap:20px;}
+  .story-grid .story-card:nth-child(1),
+  .story-grid .story-card:nth-child(2),
+  .story-grid .story-card:nth-child(3){grid-column:span 2;}
+  .story-grid .story-card:nth-child(4),
+  .story-grid .story-card:nth-child(5){grid-column:span 3;}
+  .story-card{background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:22px; display:flex; flex-direction:column; gap:14px;}
+  .story-card .icon{width:40px;height:40px; border-radius:12px; background:var(--mint); display:flex;align-items:center;justify-content:center; font-size:19px;}
+  .story-card h3{font-family:'Fredoka',sans-serif; font-size:16.5px; font-weight:600;}
+  .story-block{border-radius:12px; padding:12px 14px; font-size:12.5px; line-height:1.75;}
+  .story-block.without{background:var(--neg-1); color:var(--ink-soft);}
+  .story-block.without b{display:block; color:var(--neg-3); font-size:11.5px; margin-bottom:4px; font-family:'Space Grotesk',sans-serif;}
+  .story-block.with{background:var(--pos-1); color:var(--ink-soft);}
+  .story-block.with b{display:block; color:var(--pos-3); font-size:11.5px; margin-bottom:4px; font-family:'Space Grotesk',sans-serif;}
+  .story-goal{font-size:11px; color:var(--muted); font-family:'Space Grotesk',sans-serif;}
+
+  /* ===== phone mockups ===== */
+  .mock-section{
+    padding: 40px 56px 48px;
+    background: #EAE6DB;
+    display:flex;
+    flex-direction:column;
+    gap:32px;
+  }
+  .mock-section .head{margin-bottom:4px;}
+  .mock-section .head h2{font-family:'Fredoka',sans-serif; font-size:22px; font-weight:600;}
+  .mock-section .head p{font-size:13.5px; color:var(--muted); margin-top:6px;}
+
+  .phones-row{
+    display:flex;
+    gap:28px;
+    justify-content:flex-start;
+    flex-wrap:wrap;
+  }
+  .phone-block{display:flex; flex-direction:column; gap:12px;}
+  .phone-label{font-family:'Space Grotesk',sans-serif; font-size:11.5px; color:var(--muted); text-align:center;}
+
+  .annotations{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:16px;
+  }
+
+  .phone{
+    background: var(--ink);
+    border-radius: 32px;
+    padding: 10px;
+    width: 260px;
+    box-shadow: 0 18px 34px rgba(0,0,0,0.18);
+  }
+  .phone-screen{
+    background: var(--cream);
+    border-radius: 22px;
+    overflow:hidden;
+    height: 560px;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .status-bar{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:10px 18px 0;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:10px; color:var(--ink);
+  }
+
+  .app-header{
+    padding: 14px 18px 10px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .app-header .back{
+    width:26px;height:26px; border:1px solid var(--line); border-radius:8px;
+    display:flex;align-items:center;justify-content:center; font-size:13px;
+    background:var(--panel);
+  }
+  .app-header .t{font-family:'Fredoka',sans-serif; font-size:17px; font-weight:600;}
+  .app-header .spacer{width:26px;}
+
+  .app-body{padding:8px 16px 16px; flex:1; overflow:hidden; display:flex; flex-direction:column; gap:12px;}
+
+  .goal-card{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:14px;}
+  .goal-card .row1{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
+  .goal-card .name{font-size:13.5px; font-weight:600;}
+  .goal-card .pct{font-family:'Space Grotesk',sans-serif; font-size:11px; background:var(--mint); color:var(--ink); padding:2px 8px; border-radius:20px; font-weight:700;}
+  .bar-track{height:7px; background:var(--tan); border-radius:20px; overflow:hidden; margin-bottom:8px;}
+  .bar-fill{height:100%; background:var(--ink); border-radius:20px;}
+  .goal-card .row2{display:flex; justify-content:space-between; font-size:11px; color:var(--muted); font-family:'Space Grotesk',sans-serif;}
+  .lock-tag{display:inline-flex; align-items:center; gap:4px; font-size:10px; color:var(--muted); margin-top:6px;}
+
+  .cta-btn{
+    margin-top:auto; background:var(--mint); color:var(--ink);
+    text-align:center; padding:14px; border-radius:16px; font-weight:700; font-size:14.5px;
+  }
+  .pill-btn{
+    background:var(--tan); color:var(--tan-text); text-align:center;
+    padding:12px; border-radius:16px; font-weight:600; font-size:13px;
+  }
+
+  /* share screen */
+  .share-hero{background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:16px; text-align:center;}
+  .share-hero .ring{width:52px;height:52px; border-radius:50%; background:var(--mint); display:flex;align-items:center;justify-content:center; margin:0 auto 10px; font-size:20px;}
+  .share-hero .goal-title{font-size:14px; font-weight:700; margin-bottom:4px;}
+  .share-hero .goal-sub{font-size:11px; color:var(--muted); margin-bottom:10px;}
+  .share-progress-mini{height:6px; background:var(--tan); border-radius:20px; overflow:hidden; margin-bottom:6px;}
+  .share-progress-mini .f{height:100%; background:var(--ink); border-radius:20px;}
+  .share-hero .amounts{display:flex; justify-content:space-between; font-size:10.5px; color:var(--muted); font-family:'Space Grotesk',sans-serif;}
+
+  .contrib-title{font-size:11.5px; color:var(--muted); margin:4px 2px;}
+  .avatar-row{display:flex; align-items:center;}
+  .avatar{width:34px;height:34px; border-radius:50%; background:var(--ink); color:var(--mint); display:flex;align-items:center;justify-content:center; font-size:12px; font-weight:700; border:2px solid var(--cream); margin-inline-end:-10px;}
+  .avatar.add{background:var(--panel); color:var(--ink); border:1.5px dashed var(--line);}
+
+  .link-box{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:10px 12px; display:flex; align-items:center; justify-content:space-between; gap:8px;}
+  .link-box .url{font-family:'Space Grotesk',sans-serif; font-size:11px; color:var(--ink-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .link-box .copy{flex-shrink:0; background:var(--ink); color:var(--mint); font-size:10.5px; font-weight:700; padding:6px 10px; border-radius:10px;}
+
+  .share-channels{display:flex; gap:10px;}
+  .channel{flex:1; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:12px 6px; text-align:center; font-size:10.5px; color:var(--ink-soft);}
+  .channel .ic{width:30px;height:30px; border-radius:50%; background:var(--tan); display:flex;align-items:center;justify-content:center; margin:0 auto 6px; font-size:14px;}
+
+  /* set-amount screen */
+  .field-label{font-size:11.5px; color:var(--muted); margin-bottom:6px;}
+  .amount-box{
+    background:var(--panel); border:1px solid var(--line); border-radius:16px;
+    padding:16px; text-align:center;
+  }
+  .amount-box .big{
+    font-family:'Space Grotesk',sans-serif; font-size:30px; font-weight:700; color:var(--ink);
+  }
+  .amount-box .cur{font-size:14px; color:var(--muted); margin-inline-start:4px;}
+  .slider-track{
+    height:8px; background:var(--tan); border-radius:20px; margin-top:14px; position:relative;
+  }
+  .slider-track .fill{height:100%; width:42%; background:var(--mint); border-radius:20px;}
+  .slider-track .knob{
+    position:absolute; top:50%; right:42%; transform:translate(50%,-50%);
+    width:18px;height:18px; border-radius:50%; background:var(--ink); border:3px solid var(--mint);
+  }
+  .field-group{display:flex; flex-direction:column; gap:6px;}
+  .input-row{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:12px 14px; display:flex; justify-content:space-between; align-items:center;
+    font-size:13px;
+  }
+  .input-row .val{font-family:'Space Grotesk',sans-serif; font-weight:600;}
+  .chip-row{display:flex; gap:8px;}
+  .chip{
+    flex:1; text-align:center; font-size:11.5px; padding:9px 4px; border-radius:12px;
+    background:var(--panel); border:1px solid var(--line); color:var(--ink-soft);
+  }
+  .chip.on{background:var(--ink); color:var(--mint); border-color:var(--ink); font-weight:700;}
+  .est-note{
+    display:flex; gap:8px; align-items:flex-start; font-size:11.5px; color:var(--ink-soft);
+    background:var(--pos-1); border-radius:12px; padding:10px 12px;
+  }
+
+  .bottom-nav{
+    display:flex; justify-content:space-around; align-items:center;
+    padding:10px 12px; margin:0 12px 10px;
+    background:var(--panel); border-radius:22px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.06);
+  }
+  .bottom-nav .item{width:30px;height:30px; border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:14px; color:var(--muted);}
+  .bottom-nav .item.active{background:var(--ink); color:var(--mint);}
+
+  .note{background:var(--panel); border:1px solid var(--line); border-right:4px solid var(--mint-deep); padding:14px 18px; font-size:13.5px; color:var(--ink-soft); line-height:1.75; border-radius:10px;}
+  .note b{color:var(--ink); display:block; font-size:14px; margin-bottom:4px; font-family:'Fredoka',sans-serif; font-weight:600;}
+
+  .footer{padding:20px 56px; display:flex; justify-content:space-between; align-items:center; font-family:'Space Grotesk',sans-serif; font-size:11.5px; color:var(--muted); border-top:1px solid var(--line);}
+  .footer .mint-dot{width:8px;height:8px; background:var(--mint); display:inline-block; margin-left:6px; border-radius:50%;}
+
+  @media (max-width: 760px){
+    .grid-2, .grid-3{grid-template-columns:1fr;}
+    .grid-3 .cell:not(:last-child){border-left:none; border-bottom:1px solid var(--line);}
+    .story-grid{grid-template-columns:1fr;}
+    .story-grid .story-card{grid-column:auto !important;}
+    .mock-section{padding:30px 20px;}
+    .phones-row{flex-direction:column; align-items:center;}
+    .annotations{grid-template-columns:1fr;}
+    .phone-block{align-items:center;}
+    .phone{margin:0 auto;}
+    .header{flex-direction:column; align-items:flex-start; gap:14px;}
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <!-- HEADER : wordmark only -->
+  <div class="header">
+    <div class="wordmark">tabby savings</div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro">
+    <b>الملخص:</b> معظم مستخدمي التمويل الشخصي يبدؤون الادخار بحماس، لكنهم يسحبون أموالهم عند أول طارئ فيخسرون هدفهم الكبير. Tabby Savings تحوّل الهدف من نية إلى التزام فعلي عبر قفل تلقائي للمبلغ حتى تحقيقه.
+  </div>
+
+  <!-- PROBLEM / SOLUTION -->
+  <div class="grid-2">
+    <div class="cell border-l">
+      <div class="eyebrow"><span class="mark">١</span> المشكلة</div>
+      <h2>الادخار التقليدي سهل الكسر</h2>
+      <p>حسابات التوفير العادية تسمح بالسحب في أي لحظة، فما إن تظهر مصلحة عاجلة أو مصروف غير متوقع حتى يسحب المستخدم من رصيد هدفه الكبير — سيارة، زفاف، أو ترميم منزل — ويعود للبداية.</p>
+      <div class="stat-row">
+        <div class="stat"><b>100,000</b><span>سيارة (ر.س)</span></div>
+        <div class="stat"><b>60,000</b><span>مصاريف الزفاف (ر.س)</span></div>
+        <div class="stat"><b>25,000</b><span>ترميم المنزل (ر.س)</span></div>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="eyebrow"><span class="mark">٢</span> الحل</div>
+      <h2>حصالة هدف مقفلة داخل Tabby</h2>
+      <p>يحدد المستخدم مبلغًا مستهدفًا ويجدول اقتطاعات تلقائية، مع قفل السحب حتى بلوغ الهدف أو موعد محدد.</p>
+      <div class="solution-list">
+        <div>تحديد هدف بمبلغ ومدة واضحين</div>
+        <div>اقتطاع تلقائي مجدول من الحساب الرئيسي</div>
+        <div>قفل السحب مع استثناء طارئ محدود الاستخدام</div>
+        <div>مشاركة رابط الهدف مع العائلة والأصدقاء ليساهموا فيه</div>
+        <div>إشعار احتفالي فوري عند إتمام الهدف</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT CHANGES / WHO BENEFITS -->
+  <div class="grid-3">
+    <div class="cell">
+      <div class="benefit-icon">↻</div>
+      <h2 style="font-size:18px;">ما الذي سيتغيّر</h2>
+      <p>الادخار ينتقل من "خطة" إلى "التزام تلقائي" لا يحتاج إرادة يومية للاستمرار فيه.</p>
+    </div>
+    <div class="cell">
+      <div class="benefit-icon">◎</div>
+      <h2 style="font-size:18px;">لمن هذه الميزة</h2>
+      <p>مستخدمو Tabby الذين يخططون لمشتريات كبيرة أو مناسبات، ويحتاجون انضباطًا ماليًا دون تعقيد.</p>
+    </div>
+    <div class="cell">
+      <div class="benefit-icon">＋</div>
+      <h2 style="font-size:18px;">قيمة لـ Tabby</h2>
+      <p>تعزيز الولاء وزيادة الأرصدة المُدارة داخل التطبيق، وربط الادخار بسلوك الشراء اللاحق.</p>
+    </div>
+  </div>
+
+  <!-- USE CASES -->
+  <div class="usecases">
+    <div class="head">
+      <h2>مواقف حقيقية بدون خطة ادخار واضحة</h2>
+      <p>ثلاث عائلات، ثلاث احتياجات مختلفة بالحجم — لكن نفس المشكلة: بدون حصالة مخصصة، الفلوس تتوزع وتضيع.</p>
+    </div>
+    <div class="story-grid">
+
+      <div class="story-card">
+        <div class="icon">🚗</div>
+        <h3>عائلة تجمع فلوس سيارة لابنها</h3>
+        <div class="story-block without">
+          <b>بدون خطة</b>
+          الأب يحط جزء من راتبه، الأم تضيف من مصروفها، والابن يوفر من شغله الجزئي — كل واحد في حساب لحاله. عند أي مناسبة أو ظرف طارئ، أحدهم يسحب "مؤقتًا"، والمبلغ الكلي يظل غير واضح لأحد.
+        </div>
+        <div class="story-block with">
+          <b>مع Tabby Savings</b>
+          هدف واحد باسم "سيارة سلطان"، الكل يشوف نفس الرقم، والأب يقدر يشارك الرابط مع الأم والابن ليساهم كل واحد بمبلغه مباشرة داخل نفس الهدف المقفل.
+        </div>
+        <div class="story-goal">مثال: هدف 100,000 ر.س — ٣ مساهمين</div>
+      </div>
+
+      <div class="story-card">
+        <div class="icon">💍</div>
+        <h3>شاب يخطط للزواج ويصارع الادخار المنتظم</h3>
+        <div class="story-block without">
+          <b>بدون خطة</b>
+          ينوي يوفر جزء من راتبه كل شهر لمصاريف الزواج، لكن مع أول مناسبة أو مصروف غير متوقع يأجل الادخار "لهذا الشهر بس" — والشهر يتكرر، والموعد يقترب والمبلغ لسه بعيد.
+        </div>
+        <div class="story-block with">
+          <b>مع Tabby Savings</b>
+          يحدد مبلغ الزواج والموعد مرة وحدة، والتطبيق يقتطع تلقائيًا من راتبه أول ما يوصل، ويقدر يشارك رابط الهدف مع أهله أو أصدقائه المقربين ليساهموا فيه ويسرّعوا وصوله للمبلغ.
+        </div>
+        <div class="story-goal">مثال: هدف 60,000 ر.س — قبل الزواج بـ 10 أشهر</div>
+      </div>
+
+      <div class="story-card">
+        <div class="icon">💻</div>
+        <h3>حتى الأهداف الصغيرة — لابتوب جديد</h3>
+        <div class="story-block without">
+          <b>بدون خطة</b>
+          مو كل هدف "كبير" يستاهل خطة رسمية، فالشخص يوفر بشكل عشوائي في حسابه العادي، ويصرف منه بسهولة على أي شي ثاني قبل ما يوصل للمبلغ.
+        </div>
+        <div class="story-block with">
+          <b>مع Tabby Savings</b>
+          حتى هدف بسيط زي لابتوب بمبلغ صغير ومدة قصيرة يستاهل حصالة مقفلة — وإذا حاب، يقدر يشارك رابط الهدف مع أهله أو أصحابه ليساهموا بمبلغ بسيط ويوصل أسرع.
+        </div>
+        <div class="story-goal">مثال: هدف 4,500 ر.س — خلال شهرين</div>
+      </div>
+
+      <div class="story-card">
+        <div class="icon">🎓</div>
+        <h3>خريج جديد يستثمر في شهادة مهنية وهو بلا وظيفة</h3>
+        <div class="story-block without">
+          <b>بدون خطة</b>
+          يحتاج 2,500 ر.س لشهادة مهنية ترفع فرصته بالتوظيف، لكن بدون دخل شهري ثابت المبلغ يتجمع ببطء من مصروفه الشخصي، وأي طلب عائلي بسيط يأخذ منه الجزء اللي جمعه.
+        </div>
+        <div class="story-block with">
+          <b>مع Tabby Savings</b>
+          يحدد هدف صغير وواضح بمبلغ 2,500 ر.س، ويقفله عن السحب العرضي، ويقدر يشارك الرابط مع أهله ليساهموا فيه كدعم لبداية مسيرته المهنية.
+        </div>
+        <div class="story-goal">مثال: هدف 2,500 ر.س — شهادة مهنية</div>
+      </div>
+
+      <div class="story-card">
+        <div class="icon">✈️</div>
+        <h3>عائلة توفر لرحلة الصيف</h3>
+        <div class="story-block without">
+          <b>بدون خطة</b>
+          كل فرد بالعائلة يقول "بندبر نفسنا وقت الحجز"، فيوصل الصيف وميزانية الرحلة غير جاهزة، فيضطرون يقللون الوجهة أو يأجلون الرحلة كل سنة.
+        </div>
+        <div class="story-block with">
+          <b>مع Tabby Savings</b>
+          هدف عائلي واحد لرحلة الصيف بمبلغ ومدة محددة قبل موسم الحجز، مع اقتطاع تلقائي شهري ومشاركة الرابط بين أفراد العائلة ليتابعوا التقدّم مع بعض.
+        </div>
+        <div class="story-goal">مثال: هدف 15,000 ر.س — قبل الصيف بـ 6 أشهر</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCREEN MOCKUP -->
+  <div class="mock-section">
+    <div class="head">
+      <h2>معاينة الشاشة المقترحة</h2>
+      <p>Tabby Savings screen concept — قائمة الأهداف النشطة، تحديد مبلغ الهدف، ومشاركته مع العائلة والأصدقاء</p>
+    </div>
+
+    <div class="phones-row">
+    <div class="phone-block">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar"><span>1:15</span><span>●●●● LTE 🔋</span></div>
+          <div class="app-header">
+            <div class="back">‹</div>
+            <div class="t">Tabby Savings</div>
+            <div class="spacer"></div>
+          </div>
+          <div class="app-body">
+
+            <div class="goal-card">
+              <div class="row1"><div class="name">شراء سيارة</div><div class="pct">42%</div></div>
+              <div class="bar-track"><div class="bar-fill" style="width:42%;"></div></div>
+              <div class="row2"><span>42,000 ر.س</span><span>الهدف 100,000 ر.س</span></div>
+              <div class="lock-tag">🔒 مقفل حتى الاكتمال</div>
+            </div>
+
+            <div class="goal-card">
+              <div class="row1"><div class="name">مصاريف الزفاف</div><div class="pct">68%</div></div>
+              <div class="bar-track"><div class="bar-fill" style="width:68%;"></div></div>
+              <div class="row2"><span>40,800 ر.س</span><span>الهدف 60,000 ر.س</span></div>
+              <div class="lock-tag">🔒 اقتطاع أسبوعي تلقائي</div>
+            </div>
+
+            <div class="goal-card">
+              <div class="row1"><div class="name">ترميم المنزل</div><div class="pct">20%</div></div>
+              <div class="bar-track"><div class="bar-fill" style="width:20%;"></div></div>
+              <div class="row2"><span>5,000 ر.س</span><span>الهدف 25,000 ر.س</span></div>
+              <div class="lock-tag">🔒 موعد الإكمال: مارس 2027</div>
+            </div>
+
+            <div class="cta-btn">＋ إضافة هدف جديد</div>
+          </div>
+          <div class="bottom-nav">
+            <div class="item">👤</div>
+            <div class="item active">◔</div>
+            <div class="item">🛍</div>
+            <div class="item">⌂</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">١ — قائمة الأهداف النشطة</div>
+    </div>
+
+    <div class="phone-block">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar"><span>1:15</span><span>●●●● LTE 🔋</span></div>
+          <div class="app-header">
+            <div class="back">‹</div>
+            <div class="t">شارك هدفك</div>
+            <div class="spacer"></div>
+          </div>
+          <div class="app-body">
+
+            <div class="share-hero">
+              <div class="ring">🚗</div>
+              <div class="goal-title">شراء سيارة</div>
+              <div class="goal-sub">42,000 من 100,000 ر.س</div>
+              <div class="share-progress-mini"><div class="f" style="width:42%;"></div></div>
+              <div class="amounts"><span>42%</span><span>متبقّي 58,000 ر.س</span></div>
+            </div>
+
+            <div>
+              <div class="contrib-title">ساهم فيها معك</div>
+              <div class="avatar-row">
+                <div class="avatar">أم</div>
+                <div class="avatar">خ</div>
+                <div class="avatar">س</div>
+                <div class="avatar add">＋</div>
+              </div>
+            </div>
+
+            <div class="link-box">
+              <div class="url">tabby.app/savings/car-92f1</div>
+              <div class="copy">نسخ</div>
+            </div>
+
+            <div class="share-channels">
+              <div class="channel"><div class="ic">💬</div>واتساب</div>
+              <div class="channel"><div class="ic">✉️</div>رسالة</div>
+              <div class="channel"><div class="ic">↗</div>المزيد</div>
+            </div>
+
+            <div class="cta-btn">إرسال الدعوة</div>
+          </div>
+          <div class="bottom-nav">
+            <div class="item">👤</div>
+            <div class="item active">◔</div>
+            <div class="item">🛍</div>
+            <div class="item">⌂</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">٢ — دعوة العائلة والأصدقاء للمساهمة</div>
+    </div>
+
+    <div class="phone-block">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar"><span>1:15</span><span>●●●● LTE 🔋</span></div>
+          <div class="app-header">
+            <div class="back">‹</div>
+            <div class="t">حدّد هدفك</div>
+            <div class="spacer"></div>
+          </div>
+          <div class="app-body">
+
+            <div class="field-label">اسم الهدف</div>
+            <div class="input-row"><span>شراء سيارة</span><span>🚗</span></div>
+
+            <div class="field-label" style="margin-top:2px;">المبلغ المستهدف</div>
+            <div class="amount-box">
+              <span class="big">100,000</span><span class="cur">ر.س</span>
+              <div class="slider-track"><div class="fill"></div><div class="knob"></div></div>
+            </div>
+
+            <div class="field-group">
+              <div class="field-label">مدة الهدف</div>
+              <div class="input-row"><span>18 شهرًا</span><span class="val">مايو 2028</span></div>
+            </div>
+
+            <div class="field-group">
+              <div class="field-label">وتيرة الاقتطاع</div>
+              <div class="chip-row">
+                <div class="chip">أسبوعي</div>
+                <div class="chip on">شهري</div>
+                <div class="chip">عند الإيداع</div>
+              </div>
+            </div>
+
+            <div class="est-note">📊 بهذا المعدل، تحتاج تقتطع <b>5,556 ر.س</b> شهريًا لتصل لهدفك في الموعد.</div>
+
+            <div class="cta-btn">تأكيد وقفل الهدف</div>
+          </div>
+          <div class="bottom-nav">
+            <div class="item">👤</div>
+            <div class="item active">◔</div>
+            <div class="item">🛍</div>
+            <div class="item">⌂</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">٣ — تحديد المبلغ ووتيرة الاقتطاع</div>
+    </div>
+    </div>
+
+    <div class="annotations">
+      <div class="note"><b>بطاقات الأهداف</b>كل بطاقة تعرض شريط تقدم، المبلغ المحقق مقابل الهدف، ووسم يوضح آلية القفل أو موعد الإكمال، على خلفية الكريمي المستخدمة فعليًا داخل تطبيق Tabby.</div>
+      <div class="note"><b>تحديد المبلغ</b>شريط سحب لضبط المبلغ المستهدف، مع اختيار المدة ووتيرة الاقتطاع (أسبوعي، شهري، أو عند كل إيداع راتب).</div>
+      <div class="note"><b>حساب تلقائي للقسط</b>يحسب التطبيق فورًا القسط الدوري اللازم للوصول للهدف في الموعد المحدد، بنفس تلوين الحالة الإيجابية من دليل Tabby.</div>
+      <div class="note"><b>مشاركة الهدف</b>رابط خاص بكل هدف يمكن إرساله عبر واتساب أو رسالة، ليطّلع العائلة والأصدقاء على التقدّم ويساهموا مباشرة.</div>
+      <div class="note"><b>الألوان الوظيفية</b>حالات النجاح/التنبيه/الخطأ (مثل اكتمال هدف أو فشل اقتطاع) تستخدم تدرجات الأخضر/البرتقالي/الأحمر الرسمية من دليل Tabby.</div>
+      <div class="note"><b>لحظة الإنجاز</b>عند اكتمال الهدف، يصل إشعار احتفالي لصاحب الهدف ولكل من ساهم فيه، ويُفتح المبلغ تلقائيًا للاستخدام.</div>
+    </div>
+  </div>
+
+
+</div>
+</body>
+</html>
